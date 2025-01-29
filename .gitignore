@@ -1,5 +1,8 @@
 Data/*
-Data_Augment/*
+Data.zip
+Test_data/*
+*.csv
 Data_Final/*
 App/src/Data/*
-*csv
+Data_Augment/*
+
