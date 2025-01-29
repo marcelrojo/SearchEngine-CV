@@ -17,7 +17,7 @@ IMAGE_SIZE = (256, 256)
 EMBEDDING_DIMENSIONS = 512
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODELS = [
-    {"name": "ResNET50", "model_path": os.path.join(BASE_DIR, "src", "Models", "ResNet50.keras"), "csv_path": os.path.join(BASE_DIR, "src", "CSVs", "ResNet50.csv")},
+    {"name": "ResNET50", "model_path": os.path.join(BASE_DIR, "src", "Models", "ResNet50.keras"), "csv_path": os.path.join(BASE_DIR, "src", "CSVs", "ResNet50_pure_new.csv")},
     {"name": "Classification Model", "model_path": os.path.join(BASE_DIR, "src", "Models", "classification_model.keras"), "csv_path": os.path.join(BASE_DIR, "src", "CSVs", "classification_model_embeddings.csv")},
     {"name": "ResNET50 retrained", "model_path": os.path.join(BASE_DIR, "src", "Models", "ResNet50_retrained.keras"), "csv_path": os.path.join(BASE_DIR, "src", "CSVs", "ResNet50_retrained.csv")},
 ]
@@ -32,7 +32,8 @@ class L2Normalization(Layer):
 # --- HELPER FUNCTIONS ---
 def read_image_og(file_path):
     """Read and preprocess the image."""
-    img = cv2.imread(file_path)
+    img = PILImage.open(file_path)
+    img = np.array(img)
     img = cv2.resize(img, IMAGE_SIZE)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     return img
@@ -86,8 +87,9 @@ def load_model_and_csv(model_info):
     return model, embeddings_df
 
 # --- GET MOST SIMILAR MATCHES ---
-def get_most_similar_images(query_image_path, embedding_model, embeddings_df, k):
-    query_image = read_image_preprocessed(query_image_path)
+def get_most_similar_images(query_image_path, embedding_model, embeddings_df, k, preprocessed=True):
+    if preprocessed: query_image = read_image_preprocessed(query_image_path)
+    else: query_image = read_image_og(query_image_path)
     
     query_image = np.expand_dims(query_image, axis=0)
     
@@ -123,10 +125,13 @@ if uploaded_file:
     query_array = np.array(query_image)
     query_resized = cv2.resize(query_array, IMAGE_SIZE)
     
-
+    preprocessed = True
+    
+    if selected_model_info["name"] == "ResNET50":
+        preprocessed = False
     
     # --- GET SIMILAR IMAGES ---
-    similar_files, distances = get_most_similar_images(uploaded_file, model, csv, 3)
+    similar_files, distances = get_most_similar_images(uploaded_file, model, csv, 3, preprocessed=preprocessed)
     
     # --- DISPLAY QUERY IMAGE ---
     st.subheader("Query Image")
@@ -140,4 +145,5 @@ if uploaded_file:
     for i, col in enumerate(cols):
         if i < len(similar_files):
             match_image = read_image_og(f"{BASE_DIR}/src/Data/" + similar_files[i])
+            match_image = cv2.cvtColor(match_image, cv2.COLOR_BGR2RGB)
             col.image(imshow(match_image), caption=f"Distance: {distances[i]:.4f}", use_container_width=True)
