@@ -4,7 +4,7 @@ The aim of this project is to take an input image and output the most similar im
 
 ## Dataset
 
-The dataset used is a subset of the [Caltech 256 Image Dataset](https://www.kaggle.com/datasets/jessicali9530/caltech256/data). While the full dataset contains 257 object categories and a total of 30,607 images, this project utilizes 100 categories from the Caltech 256 dataset, along with 6 custom object categories. Each category contains approximately 100 images, resulting in a total of 11,520 images.
+The dataset used is a subset of the [Caltech 256 Image Dataset](https://www.kaggle.com/datasets/jessicali9530/caltech256/data). While the full dataset contains 257 object categories and a total of 30,607 images, this project utilizes 100 categories from the Caltech 256 dataset, along with [6 custom object categories](https://drive.google.com/drive/folders/1GZJq4RCjErIUy5mtGb5VXU2BQBMPNF3u?usp=drive_link). Each category contains approximately 100 images, resulting in a total of 11,520 images.
 
 ## Tested Models
 
