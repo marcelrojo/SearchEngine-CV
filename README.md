@@ -12,7 +12,7 @@ The models tested in this project are organized within the following directories
 
 - Pure_ResNet: This directory contains the `pure_resnet.ipynb` file used for extracting the embedding space from the ResNet50 model, as well as the `ResNet50.keras` file, which contains the extracted model.
 - Triplet_Loss_Model: This directory includes the `model_training.ipynb` file, which can be used to train an arbitrary feature extractor model with triplet loss and contrastive models. Additionally, it contains 3 models that were trained using this approach: a retrained ResNet, a custom classification model, and a model trained purely on triplet loss.
-- Classification_Model: This directory contains `classification_model.ipynb` and `classification_model_final.ipynb` files, along with a custom classification model. The trained model is saved as a .keras file, and the corresponding embeddings are stored in a .csv file.
+- Classification_Model: This directory contains `classification_model.ipynb` and `classification_model_final.ipynb` files, along with a custom classification model. The trained model is saved as a `.keras` file, and the corresponding embeddings are stored in a `.csv` file.
 - Siamese_Model: This directory contains experiments on creating a Siamese network for calculating similarity between images.
 
 ## Utils folder
@@ -25,4 +25,8 @@ The `App` directory contains the necessary code for running the Streamlit app. U
 
 ![Image](https://github.com/user-attachments/assets/8b2db828-b8fa-4c9a-8d6c-c367e0b8dc77)
 ![Image](https://github.com/user-attachments/assets/4b0d764a-cbca-4187-a3cc-25cf9767872b)
+
+## Other Remarks
+
+For details on the process of creating the image search engine, a report is available in three different formats: `.ipynb`, `.html`, and `.pdf`. Additionally, if you want to run the project locally, the `requirements.txt` file contains a list of the Python packages used.
 
