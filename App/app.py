@@ -19,6 +19,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODELS = [
     {"name": "ResNET50", "model_path": os.path.join(BASE_DIR, "src", "Models", "ResNet50.keras"), "csv_path": os.path.join(BASE_DIR, "src", "CSVs", "ResNet50.csv")},
     {"name": "Classification Model", "model_path": os.path.join(BASE_DIR, "src", "Models", "classification_model.keras"), "csv_path": os.path.join(BASE_DIR, "src", "CSVs", "classification_model_embeddings.csv")},
+    {"name": "ResNET50 retrained", "model_path": os.path.join(BASE_DIR, "src", "Models", "ResNet50_retrained.keras"), "csv_path": os.path.join(BASE_DIR, "src", "CSVs", "ResNet50_retrained.csv")},
+    {"name": "Triplet Loss", "model_path": os.path.join(BASE_DIR, "src", "Models", "contrastive_triplets.keras"), "csv_path": os.path.join(BASE_DIR, "src", "CSVs", "contrastive_triplets.csv")},
 ]
 
 DATA_FOLDER = os.path.join(BASE_DIR, "src", "Data", "*")
@@ -84,8 +86,10 @@ def load_model_and_csv(model_info):
     return model, embeddings_df
 
 # --- GET MOST SIMILAR MATCHES ---
-def get_most_similar_images(query_image_path, embedding_model, embeddings_df, k=5):
-    query_image = read_image_preprocessed(query_image_path)
+def get_most_similar_images(query_image_path, embedding_model, embeddings_df, k, preprocessed=True):
+    if preprocessed: query_image = read_image_preprocessed(query_image_path)
+    else: query_image = read_image_og(query_image_path)
+    
     query_image = np.expand_dims(query_image, axis=0)
     
     query_embedding = embedding_model.predict(query_image).flatten()
@@ -120,8 +124,12 @@ if uploaded_file:
     query_array = np.array(query_image)
     query_resized = cv2.resize(query_array, IMAGE_SIZE)
     
+    preprocessed = True
+    if selected_model_info["name"] == "ResNET50" or selected_model_info["name"] == "ResNET50 retrained":
+        preprocessed = False
+    
     # --- GET SIMILAR IMAGES ---
-    similar_files, distances = get_most_similar_images(uploaded_file, model, csv, k=3)
+    similar_files, distances = get_most_similar_images(uploaded_file, model, csv, 3, preprocessed)
     
     # --- DISPLAY QUERY IMAGE ---
     st.subheader("Query Image")
